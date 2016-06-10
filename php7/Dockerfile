@@ -1,11 +1,11 @@
 FROM alpine:edge
-MAINTAINER Naerymdan <vincent.dev@gmail.com>
+MAINTAINER EdwinHakked <edwin@inqbeta.hk>
 ##
 # PHP 7.X
 
 RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 
-#Install PHP7, Pygments and Git
+#Install PHP7, Pygments, ssh and Git
 RUN apk upgrade -U \
     && apk --update add \
         php7 \
@@ -21,7 +21,7 @@ RUN apk upgrade -U \
         php7-mysqlnd \
         php7-opcache \
         php7-openssl \
-		php7-pcntl \
+        php7-pcntl \
         php7-pdo \
         php7-pdo_mysql \
         php7-posix \
@@ -31,6 +31,8 @@ RUN apk upgrade -U \
         php7-zip \
 		git \
 		py-pygments \
+		openssh \
+	
     && rm -rf /var/cache/apk/*
 
 #Build apcu & apcu_bc for PHP7

@@ -1,0 +1,90 @@
+phd-data:
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.container.start_once: 'true'
+  tty: true
+  image: busybox
+  volumes:
+  - /opt/phabricator/srv:/srv
+  - /opt/phabricator/repo:/repo
+  - /opt/phabricator/data:/data
+  stdin_open: true
+  net: "none"
+  entrypoint:
+  - /bin/true
+phd-trig:
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  command:
+  - TRIG
+  image: naerymdan/docker-compose-phabricator-php7
+  net: "container:php"
+  links:
+  - 'mysql:'
+  volumes_from:
+  - phd-data
+  stdin_open: true
+php:
+  environment:
+    MYSQL_ROOT_PASSWORD: WTF2046
+  labels:
+    io.rancher.sidekicks: phd-pull,phd-task,phd-trig,phd-data
+    io.rancher.container.pull_image: always
+  tty: true
+  command:
+  - FPM
+  image: naerymdan/docker-compose-phabricator-php7
+  links:
+  - 'mysql:'
+  volumes_from:
+  - phd-data
+  stdin_open: true
+web:
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  image: naerymdan/docker-compose-phabricator-nginx
+  links:
+  - 'php:'
+  volumes:
+  - /opt/phabricator/srv:/srv
+  - /opt/phabricator/repo:/repo
+  - /opt/phabricator/data:/data
+  stdin_open: true
+phd-task:
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  command:
+  - TASK
+  image: naerymdan/docker-compose-phabricator-php7
+  net: "container:php"
+  links:
+  - 'mysql:'
+  volumes_from:
+  - phd-data
+  stdin_open: true
+phd-pull:
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  command:
+  - PULL
+  image: naerymdan/docker-compose-phabricator-php7
+  net: "container:php"
+  links:
+  - 'mysql:'
+  volumes_from:
+  - phd-data
+  stdin_open: true
+mysql:
+  environment:
+    MYSQL_ROOT_PASSWORD: WTF2046
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  image: naerymdan/docker-compose-phabricator-mysql
+  volumes:
+  - /opt/phabricator/mysql:/var/lib/mysql
+  stdin_open: true
