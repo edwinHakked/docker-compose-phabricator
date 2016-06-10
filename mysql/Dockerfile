@@ -1,5 +1,5 @@
 FROM alpine:edge
-MAINTAINER Naerymdan <vincent.dev@gmail.com>
+MAINTAINER EdwinHakked <edwin@inqbeta.hk>
 ##
 # Mysql 5.7+
 ##
@@ -14,8 +14,8 @@ RUN addgroup -S mysql && adduser -S -g mysql mysql
 # Data::Dumper
 RUN apk upgrade -U \
     && apk --update add \
-	    mysql \
-		mysql-client \
+	    mariadb \
+		mariadb-client \
 		tzdata bash \
     && rm -rf /var/cache/apk/* \
 	&& rm -rf /var/lib/mysql
