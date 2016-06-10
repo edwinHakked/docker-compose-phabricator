@@ -25,7 +25,7 @@ phd-trig:
   volumes_from:
   - phd-data
   stdin_open: true
-php:
+pha:
   environment:
     MYSQL_ROOT_PASSWORD: WTF2046
   labels:
